@@ -17,6 +17,16 @@ const Login = (props) => {
     const goToRecuperarSenha = () => {
         props.navigation.navigate('RecuperarSenha')
     }
+
+    const goToNovaConta = () => {
+        props.navigation.navigate('NovaConta')
+    }
+
+    const goToHome = () => {
+        props.navigation.navigate('Home')
+    }
+    
+
   return (
     <View style={estilos.view}>
       <View >
@@ -29,12 +39,12 @@ const Login = (props) => {
           <TextInput style={estilos.input} placeholder="Digite seu e-mail" />
           <Text style={estilos.FormText}>Senha</Text>
           <TextInput style={estilos.input} placeholder="Digite sua senha" />
-          <Botao tipoBotao="botaoEntrar" texto="Entrar" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={() => { alert('Clicou') }} />
+          <Botao tipoBotao="botaoEntrar" texto="Entrar" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={goToHome} />
 
         </View>
         
         <View >
-          <Botao tipoBotao="botaoCriar" texto="Criar minha conta" onPress={() => { alert('Clicou') }} />
+          <Botao tipoBotao="botaoCriar" texto="Criar minha conta" onPress={goToNovaConta} />
           <Botao tipoBotao="botaoEsqueci" texto="Esqueci minha senha" onPress={goToRecuperarSenha} />
         </View>
 

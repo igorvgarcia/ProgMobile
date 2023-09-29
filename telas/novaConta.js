@@ -6,7 +6,7 @@ import Botao from '../src/components/Botao'
 import Logo from '../src/components/Logo'
 
 //Definição de função
-const novaConta = () => {
+const NovaConta = () => {
   return (
     <View style={estilos.view}>
       <View >
@@ -73,6 +73,6 @@ const estilos = StyleSheet.create({
 
 })
 //Exportação
-export default novaConta
+export default NovaConta
 
 // Path: AwesomeProject/App.js
