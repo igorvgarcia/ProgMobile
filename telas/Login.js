@@ -4,27 +4,42 @@ import { Text, TextInput } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
+import { useContext } from 'react'
+import ContextManager  from '../telas/shared/dataContext'
 
 import Botao from '../src/components/Botao'
 import Logo from '../src/components/Logo'
 
 //Definição de função
 const Login = (props) => {
+  const context = ContextManager.instance;
 
-    const [email, setEmail] = useState('')
-    const [senha, setSenha] = useState('')
+  const [email, setEmail] = useState('')
+  const [senha, setSenha] = useState('')
 
-    const goToRecuperarSenha = () => {
-        props.navigation.navigate('RecuperarSenha')
+  const [showError, setChangeShowError] = useState(false)
+
+  function sendLogin() {
+    setChangeShowError(false)
+    const user = context.login(email, senha);
+    if(!user) {
+      setChangeShowError(true)
+    } else {
+      props.navigation.navigate('Drawer')
     }
+  }
 
-    const goToNovaConta = () => {
-        props.navigation.navigate('NovaConta')
-    }
+  const goToRecuperarSenha = () => {
+      props.navigation.navigate('RecuperarSenha')
+  }
 
-    const goToHome = () => {
-        props.navigation.navigate('Home')
-    }
+  const goToNovaConta = () => {
+      props.navigation.navigate('NovaConta')
+  }
+
+  const goToHome = () => {
+      props.navigation.navigate('Home')
+  }
     
 
   return (
@@ -36,10 +51,13 @@ const Login = (props) => {
 
         <View style={estilos.FormContainer}>
           <Text style={estilos.FormText}>E-mail</Text>
-          <TextInput style={estilos.input} placeholder="Digite seu e-mail" />
+          <TextInput style={estilos.input} value={email} onChangeText={setEmail} placeholder="Digite seu e-mail" />
+          <View style={estilos.wrapperErro}>
+            {showError && <Text style={estilos.erroText}>E-mail e/ou senha inválidos.</Text>}
+          </View>
           <Text style={estilos.FormText}>Senha</Text>
-          <TextInput style={estilos.input} placeholder="Digite sua senha" />
-          <Botao tipoBotao="botaoEntrar" texto="Entrar" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={goToHome} />
+          <TextInput style={estilos.input} value={senha} onChangeText={setSenha} placeholder="Digite sua senha" />
+          <Botao tipoBotao="botaoEntrar" texto="Entrar" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={sendLogin} />
 
         </View>
         
@@ -99,6 +117,14 @@ const estilos = StyleSheet.create({
   BotaoInf: {
   
 
+  },
+  erroText: {
+    color: 'red',
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginTop: 5,
+    width: 340,
+    textAlign: 'center'
   },
 
 })
