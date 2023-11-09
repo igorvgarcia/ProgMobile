@@ -4,9 +4,29 @@ import { Text, TextInput } from 'react-native'
 import { StyleSheet } from 'react-native'
 import Botao from '../src/components/Botao'
 import Logo from '../src/components/Logo'
+import { useState, useContext } from 'react'
 
 //Definição de função
-const RecuperarSenha = () => {
+const RecuperarSenha = ({ navigation }) => {
+  const [email, setEmail] = useState('')
+
+  const [showError, setChangeShowError] = useState(false)
+
+  function sendForgotPassword() {
+    if (verifyEmail()) {
+      navigation.push("Login");
+    }
+    else {
+      setChangeShowError(true);
+    }
+  }
+
+  function verifyEmail() {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  }
+
   return (
     <View style={estilos.view}>
       <View >
@@ -16,9 +36,9 @@ const RecuperarSenha = () => {
 
         <View style={estilos.FormContainer}>
           <Text style={estilos.FormText}>E-mail</Text>
-          <TextInput style={estilos.input} placeholder="Digite seu e-mail" />
-          
-          <Botao tipoBotao="botaoEntrar" texto="RECUPERAR" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={() => { alert('Clicou') }} />
+          <TextInput style={estilos.input} value={email} onChangeText={setEmail} placeholder="Digite seu e-mail" />
+          <View style={estilos.wrapperErro}>{showError && <Text style={estilos.erroText}>E-mail inválido.</Text>}</View>
+          <Botao tipoBotao="botaoEntrar" texto="RECUPERAR" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={sendForgotPassword} />
 
         </View>
 
@@ -59,6 +79,14 @@ const estilos = StyleSheet.create({
   input: {
     backgroundColor: 'white',
 
+  },
+  erroText: {
+    color: 'red',
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginTop: 5,
+    width: 340,
+    textAlign: 'center'
   },
 
 })

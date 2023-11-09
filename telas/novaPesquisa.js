@@ -4,9 +4,24 @@ import { Text, TextInput } from 'react-native'
 import { StyleSheet } from 'react-native'
 import Botao from '../src/components/Botao'
 import Logo from '../src/components/Logo'
+import { useState } from 'react'
 
 //Definição de função
 const NovaPesquisa = () => {
+
+  const [nome, setNome] = useState('')
+  const [data, setData] = useState('')
+  const [imagem, setImagem] = useState('')
+
+  const [showError, setChangeShowError] = useState(false)
+
+  function validarCampos() {
+    setChangeShowError(false)
+    if(nome == "" || data == "" || imagem == ""){
+      setChangeShowError(true)
+    }
+  }
+
   return (
     <View style={estilos.view}>
       <View >
@@ -16,12 +31,15 @@ const NovaPesquisa = () => {
 
         <View style={estilos.FormContainer}>
           <Text style={estilos.FormText}>Nome</Text>
-          <TextInput style={estilos.input} placeholder="Digite o nome" />
+          <TextInput value={nome} onChangeText={setNome} style={estilos.input} placeholder="Digite o nome" />
           <Text style={estilos.FormText}>Data</Text>
-          <TextInput style={estilos.input} placeholder="INPUT PARA DATA ALTERAR" />
+          <TextInput value={data} onChangeText={setData} style={estilos.input}  />
           <Text style={estilos.FormText}>Imagem</Text>
-          <TextInput style={estilos.input} placeholder="INPUT PARA IMAGEM ALTERAR" />
-          <Botao tipoBotao="botaoEntrar" texto="CADASTRAR" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={() => { alert('Clicou') }} />
+          <TextInput value={imagem} onChangeText={setImagem} style={estilos.input}  />
+          <View style={estilos.wrapperErro}>
+            {showError && <Text style={estilos.erroText}>Campos em branco!</Text>}
+          </View>
+          <Botao tipoBotao="botaoEntrar" texto="CADASTRAR" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={validarCampos} />
 
         </View>
 
@@ -70,6 +88,15 @@ const estilos = StyleSheet.create({
     backgroundColor: 'white',
 
   },
+  erroText: {
+    color: 'red',
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginTop: 5,
+    width: 340,
+    textAlign: 'center'
+  },
+
 
 })
 //Exportação

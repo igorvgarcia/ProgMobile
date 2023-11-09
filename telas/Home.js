@@ -15,6 +15,17 @@ const Home = (props) => {
         props.navigation.navigate('NovaPesquisa')
     }
 
+    const goToModificarPesquisa = () => {
+        props.navigation.navigate('modificarPesquisa')
+    }
+
+    const goToAcoesPesquisa = () => {
+        props.navigation.navigate('AcoesPesquisa')
+    }
+
+    const goToColeta = () => {
+        props.navigation.navigate('Coleta')
+    }
 
     return (
         <View style={estilos.view}>
@@ -25,7 +36,7 @@ const Home = (props) => {
             </View>
 
             <View style={estilos.cardWrapper}>
-                <TouchableOpacity style={estilos.cardTouchable}>
+                <TouchableOpacity style={estilos.cardTouchable} onPress={goToModificarPesquisa}>
                     <View style={estilos.card}>
                         <Image source={require("../assets/images/icon_search.png")} />
                         <Text>SECOMP 2023</Text>
@@ -43,7 +54,8 @@ const Home = (props) => {
 
             <View>
                 <Botao tipoBotao="botaoCriar" texto="NOVA PESQUISA" onPress={goToNovaPesquisa} />
-
+                <Botao tipoBotao="botaoCriar" texto="AÇÕES DE PESQUISA" onPress={goToAcoesPesquisa} />
+                <Botao tipoBotao="botaoCriar" texto="COLETA" onPress={goToColeta} />
             </View>
         </View>
     )

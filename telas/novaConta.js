@@ -4,9 +4,46 @@ import { Text, TextInput } from 'react-native'
 import { StyleSheet } from 'react-native'
 import Botao from '../src/components/Botao'
 import Logo from '../src/components/Logo'
+import { useState, useContext } from 'react'
+import ContextManager from '../telas/shared/dataContext';
 
 //Definição de função
-const NovaConta = () => {
+const NovaConta = ({ navigation }) => {
+
+  const context = ContextManager.instance;
+
+  function cadastrarConta() {
+    if(senha != senhaRepetida) {
+      setSenhaNotEqualError(true);
+      return false;
+    }
+    if (verifyEmail()) {
+      context.createUser({
+        nomeCompleto,
+        email,
+        senha
+      })
+      navigation.pop();
+    }
+    else {
+      setChangeShowError(true);
+    }
+  }
+
+  function verifyEmail() {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  }
+
+  const [nomeCompleto, setNomeCompleto] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [senha, setSenha] = useState(null);
+  const [senhaRepetida, setSenhaRepetida] = useState(null)
+
+  const [showSenhaNotEqualError, setSenhaNotEqualError] = useState(false)
+  const [showError, setChangeShowError] = useState(false)
+
   return (
     <View style={estilos.view}>
       <View >
@@ -16,12 +53,14 @@ const NovaConta = () => {
 
         <View style={estilos.FormContainer}>
           <Text style={estilos.FormText}>E-mail</Text>
-          <TextInput style={estilos.input} placeholder="Digite seu e-mail" />
+          <TextInput style={estilos.input} value={email} onChangeText={setEmail} placeholder="Digite seu e-mail" />
+          <View style={estilos.wrapperErro}>{showError && <Text style={estilos.erroText}>E-mail inválido.</Text>}</View>
           <Text style={estilos.FormText}>Senha</Text>
-          <TextInput style={estilos.input} placeholder="Digite sua senha" />
+          <TextInput style={estilos.input} value={senha} onChangeText={setSenha} secureTextEntry={true} placeholder="Digite sua senha" />
           <Text style={estilos.FormText}>Repetir Senha</Text>
-          <TextInput style={estilos.input} placeholder="Digite novamente a Senha" />
-          <Botao tipoBotao="botaoEntrar" texto="Cadastrar" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={() => { alert('Clicou') }} />
+          <TextInput style={estilos.input} value={senhaRepetida} onChangeText={setSenhaRepetida} secureTextEntry={true} placeholder="Digite novamente a Senha" />
+          <View style={estilos.wrapperErro}>{showSenhaNotEqualError && <Text style={estilos.erroText}>Campos de senha não correspondem.</Text>}</View>
+          <Botao tipoBotao="botaoEntrar" texto="Cadastrar" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={cadastrarConta} />
 
         </View>
 
@@ -69,6 +108,14 @@ const estilos = StyleSheet.create({
   input: {
     backgroundColor: 'white',
 
+  },
+  erroText: {
+    color: 'red',
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginTop: 5,
+    width: 340,
+    textAlign: 'center'
   },
 
 })
