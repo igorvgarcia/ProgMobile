@@ -5,12 +5,27 @@ import { StyleSheet } from 'react-native'
 import Botao from '../src/components/Botao'
 import Logo from '../src/components/Logo'
 import { useState, useContext } from 'react'
+import { sendPasswordResetEmail } from 'firebase/auth'
+import { auth_mod } from '../src/firebase/config/firebase'
 
 //Definição de função
 const RecuperarSenha = ({ navigation }) => {
   const [email, setEmail] = useState('')
 
   const [showError, setChangeShowError] = useState(false)
+
+  const recuperarSenha = () => {
+    sendPasswordResetEmail(auth_mod, email)
+      .then(() => {
+        console.log("Email de recuperação de senha enviado");
+        // Password reset email sent!
+        // ..
+      })
+      .catch((error) => {
+        console.log("Erro ao recuperar senha", JSON.stringify(error));
+        // ..
+      });
+  }
 
   function sendForgotPassword() {
     if (verifyEmail()) {
@@ -38,7 +53,7 @@ const RecuperarSenha = ({ navigation }) => {
           <Text style={estilos.FormText}>E-mail</Text>
           <TextInput style={estilos.input} value={email} onChangeText={setEmail} placeholder="Digite seu e-mail" />
           <View style={estilos.wrapperErro}>{showError && <Text style={estilos.erroText}>E-mail inválido.</Text>}</View>
-          <Botao tipoBotao="botaoEntrar" texto="RECUPERAR" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={sendForgotPassword} />
+          <Botao tipoBotao="botaoEntrar" texto="RECUPERAR" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={recuperarSenha} />
 
         </View>
 

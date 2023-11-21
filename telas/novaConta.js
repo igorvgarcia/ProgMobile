@@ -6,14 +6,33 @@ import Botao from '../src/components/Botao'
 import Logo from '../src/components/Logo'
 import { useState, useContext } from 'react'
 import ContextManager from '../telas/shared/dataContext';
+import { getFirestore, collection, addDoc, initializeFirestore } from 'firebase/firestore';
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { auth_mod } from '../src/firebase/config/firebase';
+
+import app from '../src/firebase/config/firebase';
 
 //Definição de função
 const NovaConta = ({ navigation }) => {
 
+  const addUsuario = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth_mod, email, senha);
+      const user = userCredential.user;
+  
+      console.log("Usuário criado com sucesso", JSON.stringify(user));
+  
+      // Agora, você pode adicionar user.uid, user.email, etc., ao Firestore se necessário.
+    } catch (error) {
+      console.log("Erro ao criar usuário", JSON.stringify(error));
+    }
+  };
+  
+
   const context = ContextManager.instance;
 
-  function cadastrarConta() {
-    if(senha != senhaRepetida) {
+  const cadastrarConta = async () => {
+    if (senha != senhaRepetida) {
       setSenhaNotEqualError(true);
       return false;
     }
@@ -22,13 +41,18 @@ const NovaConta = ({ navigation }) => {
         nomeCompleto,
         email,
         senha
-      })
-      navigation.pop();
-    }
-    else {
+      });
+
+      try {
+        await addUsuario();
+
+      } catch (error) {
+        console.error("Erro ao adicionar o usuário:", error);
+      }
+    } else {
       setChangeShowError(true);
     }
-  }
+  };
 
   function verifyEmail() {
     return email.match(
@@ -60,7 +84,9 @@ const NovaConta = ({ navigation }) => {
           <Text style={estilos.FormText}>Repetir Senha</Text>
           <TextInput style={estilos.input} value={senhaRepetida} onChangeText={setSenhaRepetida} secureTextEntry={true} placeholder="Digite novamente a Senha" />
           <View style={estilos.wrapperErro}>{showSenhaNotEqualError && <Text style={estilos.erroText}>Campos de senha não correspondem.</Text>}</View>
-          <Botao tipoBotao="botaoEntrar" texto="Cadastrar" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={cadastrarConta} />
+
+
+          <Botao onPress={cadastrarConta} tipoBotao="botaoEntrar" texto="Cadastrar" estilos={estilos.botao} estilosTexto={estilos.texto} />
 
         </View>
 

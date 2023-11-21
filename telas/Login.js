@@ -6,6 +6,8 @@ import { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { useContext } from 'react'
 import ContextManager  from '../telas/shared/dataContext'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth_mod } from '../src/firebase/config/firebase'
 
 import Botao from '../src/components/Botao'
 import Logo from '../src/components/Logo'
@@ -18,6 +20,22 @@ const Login = (props) => {
   const [senha, setSenha] = useState('')
 
   const [showError, setChangeShowError] = useState(false)
+
+  const Autenticar = () => {
+    signInWithEmailAndPassword(auth_mod, email, senha)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        console.log("Usuário logado com sucesso", JSON.stringify(user));
+        props.navigation.navigate('Drawer')
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("Erro ao logar usuário", JSON.stringify(error));
+      });
+  }
 
   function sendLogin() {
     setChangeShowError(false)
@@ -57,7 +75,7 @@ const Login = (props) => {
           </View>
           <Text style={estilos.FormText}>Senha</Text>
           <TextInput style={estilos.input} value={senha} onChangeText={setSenha} placeholder="Digite sua senha" />
-          <Botao tipoBotao="botaoEntrar" texto="Entrar" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={sendLogin} />
+          <Botao tipoBotao="botaoEntrar" texto="Entrar" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={Autenticar} />
 
         </View>
         
