@@ -15,6 +15,8 @@ import { app, storage } from '../src/firebase/config/firebase'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 
 const Home = (props) => {
+    const navigation = useNavigation();
+
     const email = useSelector((state) => state.login.email)
     const password = useSelector((state) => state.login.password)
 
@@ -34,6 +36,7 @@ const Home = (props) => {
                     ...doc.data()
                 })
             })
+            console.log(pesquisas)
             setListaPesquisas(pesquisas)
         })
     }, []) 
@@ -53,8 +56,9 @@ const Home = (props) => {
         props.navigation.navigate('NovaPesquisa')
     }
 
-    const goToModificarPesquisa = () => {
-        props.navigation.navigate('modificarPesquisa')
+    const goToModificarPesquisa = (id, nome, data, imagemUrl, imagemNome) => {
+        console.log("id: " + id)
+        props.navigation.navigate('modificarPesquisa', { id: id, nome: nome, data: data, imagemUrl: imagemUrl, imagemNome: imagemNome })
     }
 
     const goToAcoesPesquisa = () => {
@@ -79,7 +83,7 @@ const Home = (props) => {
                     <TouchableOpacity
                     key={index}
                     style={estilos.cardTouchable}
-                    onPress={() => goToModificarPesquisa(pesquisa.nome)}
+                    onPress={() => goToModificarPesquisa(pesquisa.id, pesquisa.nome, pesquisa.data, pesquisa.imagemUrl, pesquisa.imagem)}
                     >
                     <View style={estilos.card}>
                         <Image source={{uri: pesquisa.imagemUrl}} style={{width:'40%', height: '30%'}}></Image>                  

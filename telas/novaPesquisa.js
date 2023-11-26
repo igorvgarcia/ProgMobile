@@ -11,7 +11,7 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 
 //Definição de função
-const NovaPesquisa = () => {
+const NovaPesquisa = (props) => {
 
   const [nome, setNome] = useState('')
   const [data, setData] = useState('')
@@ -29,7 +29,8 @@ const NovaPesquisa = () => {
       setChangeShowError(true)
     }
 
-    const imageRef = ref(storage, (nome + Math.floor(Math.random() * 100).toString() + ".jpeg"))
+    const nomeArquivo = (nome + Math.floor(Math.random() * 100).toString() + ".jpeg")
+    const imageRef = ref(storage, nomeArquivo)
     const file = await fetch(imagem)
     const blob = await file.blob()
 
@@ -43,11 +44,12 @@ const NovaPesquisa = () => {
                 const docPesquisa = {
                   nome: nome, 
                   data: data,
-                  imagem: imagem,
+                  imagem: nomeArquivo,
                   imagemUrl: result
                 }
 
                 addDoc(pesquisaCollection, docPesquisa)
+                props.navigation.navigate('Home')
               }
             )
             .catch(

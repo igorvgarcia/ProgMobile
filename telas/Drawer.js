@@ -3,6 +3,7 @@ import { getHeaderTitle } from '@react-navigation/elements';
 import { useContext } from 'react'
 import { Text, StyleSheet, Image, Pressable, View } from 'react-native'
 import ContextManager from '../telas/shared/dataContext'
+import { useSelector } from 'react-redux'
 
 import Home from '../telas/Home';
 
@@ -47,9 +48,9 @@ const DrawerApp = () => {
 }
 
 const DrawerItems = (props) => {
+  const email = useSelector((state) => state.login.email)
 
-
-  const userName = "Usuário"
+  const userName = email
   function logout() {
     props.navigation.navigate('Login')
   }
