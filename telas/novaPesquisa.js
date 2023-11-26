@@ -5,6 +5,8 @@ import { StyleSheet } from 'react-native'
 import Botao from '../src/components/Botao'
 import Logo from '../src/components/Logo'
 import { useState } from 'react'
+import { collection, initializeFirestore, addDoc } from 'firebase/firestore'
+import { app } from '../src/firebase/config/firebase'
 
 //Definição de função
 const NovaPesquisa = () => {
@@ -15,11 +17,21 @@ const NovaPesquisa = () => {
 
   const [showError, setChangeShowError] = useState(false)
 
+  const db = initializeFirestore(app, {experimentalForceLongPolling: true})
+  const pesquisaCollection = collection(db, "pesquisa")
+
   function validarCampos() {
     setChangeShowError(false)
     if(nome == "" || data == "" || imagem == ""){
       setChangeShowError(true)
     }
+
+    const docPesquisa = {
+      nome: nome, 
+      data: data
+    }
+
+    addDoc(pesquisaCollection, docPesquisa)
   }
 
   return (
