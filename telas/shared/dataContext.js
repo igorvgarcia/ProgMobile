@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+
 
 export class User {
     nome = ""
@@ -23,37 +23,17 @@ export class Cards {
 }
 
 export class DataContext {
-    constructor() {
-        this.createUser(
-            {
-                nome : "Felipe Loiola",
-                email : "felipe_oliveira74@hotmail.com",
-                senha : "teste123",
-            }
-        );
-    }
-
-    users = [];
-    cards = [];
     loggedUser = null;
-
-    createUser(dtoUser = new User()) {
-        const newUser = new User(dtoUser)
-        this.users.push(newUser);
+    constructor() {
     }
 
-    createCards(dtoCards = new Cards()) {
-        const newCard = new Cards(dtoCards)
-        this.cards.push(newCard);
+
+    setUserLoggedId(dto) {
+        this.loggedUser = new User(dto)
     }
 
-    login(email, senha) {
-        const foundUser = this.users.find((user) => user.email == email);
-        if(foundUser && foundUser.senha == senha) {
-            this.loggedUser = foundUser;
-            return foundUser;
-        }
-        return false;
+    logout() {
+        this.loggedUser = null;
     }
 }
 

@@ -4,13 +4,13 @@ import { getAuth } from 'firebase/auth';
 
 // TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyBLrAOUrS95jeu6vqoHpY5bnfnYV_yetmo",
-    authDomain: "progmobile-15766.firebaseapp.com",
-    projectId: "progmobile-15766",
-    storageBucket: "progmobile-15766.appspot.com",
-    messagingSenderId: "983372598221",
-    appId: "1:983372598221:web:f537b09407b8864e045284"
-  };
+  apiKey: "AIzaSyArrMLIL1DXTAlVfCitJQFEpI92t1Q96QI",
+  authDomain: "mobile-6c1dd.firebaseapp.com",
+  projectId: "mobile-6c1dd",
+  storageBucket: "mobile-6c1dd.appspot.com",
+  messagingSenderId: "138871814232",
+  appId: "1:138871814232:web:01d44aa281c01f1c75322d"
+};
 
   const app = initializeApp(firebaseConfig);
   const auth_mod = getAuth(app);

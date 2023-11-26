@@ -8,7 +8,19 @@ import Botao from '../src/components/Botao'
 import Logo from '../src/components/Logo'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
+import { useSelector } from 'react-redux'
+
 const Home = (props) => {
+    const email = useSelector((state) => state.login.email)
+    const password = useSelector((state) => state.login.password)
+
+    if(!email) {
+        console.log(email)
+    }
+    else {
+        console.log(email)
+    }
+
     const [pesquisa, setPesquisa] = useState('')
 
     const goToNovaPesquisa = () => {

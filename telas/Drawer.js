@@ -47,9 +47,9 @@ const DrawerApp = () => {
 }
 
 const DrawerItems = (props) => {
-  const context = ContextManager.instance;
 
-  const userName = context.loggedUser ? context.loggedUser.email : "Usuário"
+
+  const userName = "Usuário"
   function logout() {
     props.navigation.navigate('Login')
   }

@@ -8,13 +8,17 @@ import { useContext } from 'react'
 import ContextManager  from '../telas/shared/dataContext'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth_mod } from '../src/firebase/config/firebase'
+import { useDispatch } from 'react-redux'
+import { reducerSetLogin } from './shared/redux/loginSlice'
 
 import Botao from '../src/components/Botao'
 import Logo from '../src/components/Logo'
 
 //Definição de função
 const Login = (props) => {
-  const context = ContextManager.instance;
+
+
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
@@ -27,6 +31,9 @@ const Login = (props) => {
         // Signed in 
         const user = userCredential.user;
         console.log("Usuário logado com sucesso", JSON.stringify(user));
+
+        dispatch(reducerSetLogin({ email: email, password: senha }))
+
         props.navigation.navigate('Drawer')
         // ...
       })
