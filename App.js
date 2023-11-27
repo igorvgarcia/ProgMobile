@@ -11,6 +11,7 @@ import AcoesPesquisa from "./telas/AcoesPesquisa";
 import Relatorio from "./telas/Relatorio";
 import Coleta from "./telas/Coleta";
 import AgradecimentoParticipacao from "./telas/AgradecimentoParticipacao";
+import ListagemColeta from "./telas/ListagemColeta";
 import { Provider } from "react-redux"
 import { store } from "./telas/shared/redux/store"
 
@@ -41,7 +42,7 @@ const App = () => {
           <Stack.Screen name="AcoesPesquisa" component={AcoesPesquisa} options={{headerTitle: 'Acoes Pesquisa'}}/>
           <Stack.Screen name="Coleta" component={Coleta} options={{headerTitle: 'Coleta'}}/>
           <Stack.Screen name="AgradecimentoParticipacao" component={AgradecimentoParticipacao} options={{headerTitle: 'Coleta'}}/>
-
+          <Stack.Screen name="ListagemColeta" component={ListagemColeta} options={{headerTitle: 'Coleta'}}/>
         </Stack.Navigator>
       </NavigationContainer>
 

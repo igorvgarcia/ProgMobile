@@ -45,7 +45,14 @@ const NovaPesquisa = (props) => {
                   nome: nome, 
                   data: data,
                   imagem: nomeArquivo,
-                  imagemUrl: result
+                  imagemUrl: result,
+                  coleta: {
+                    pessimo: 0,
+                    ruim: 0,
+                    neutro: 0,
+                    bom: 0, 
+                    excelente: 0
+                  }
                 }
 
                 addDoc(pesquisaCollection, docPesquisa)

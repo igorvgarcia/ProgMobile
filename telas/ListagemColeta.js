@@ -14,7 +14,7 @@ import { collection, initializeFirestore, addDoc, query, onSnapshot } from 'fire
 import { app, storage } from '../src/firebase/config/firebase'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 
-const Home = (props) => {
+const ListagemColeta = (props) => {
     const navigation = useNavigation();
 
     const email = useSelector((state) => state.login.email)
@@ -24,7 +24,6 @@ const Home = (props) => {
     const pesquisaCollection = collection(db, "pesquisa")
 
     const [listaPesquisas, setListaPesquisas] = useState([])
-    const [pesquisa, setPesquisa] = useState('')
 
     useEffect( () => {
         const q = query(pesquisaCollection)
@@ -49,50 +48,27 @@ const Home = (props) => {
         console.log(email)
     }
 
-    const goToNovaPesquisa = () => {
-        props.navigation.navigate('NovaPesquisa')
-    }
-
-    const goToModificarPesquisa = (id, nome, data, imagemUrl, imagemNome) => {
+    const goToModificarPesquisa = (id, nome, data, imagemUrl, imagemNome, coletas) => {
         console.log("id: " + id)
-        props.navigation.navigate('modificarPesquisa', { id: id, nome: nome, data: data, imagemUrl: imagemUrl, imagemNome: imagemNome })
-    }
-
-    const goToAcoesPesquisa = () => {
-        props.navigation.navigate('AcoesPesquisa')
-    }
-
-    const goToColeta = () => {
-        props.navigation.navigate('Coleta')
+        props.navigation.navigate('Coleta', { id: id, nome: nome, data: data, imagemUrl: imagemUrl, imagemNome: imagemNome, coletas: coletas })
     }
 
     return (
         <View style={estilos.view}>
-            <View style={estilos.pesquisa}>
-                <Image source={require("../assets/images/icon_search.png")} />
-                <TextInput style={estilos.input} placeholder="Insira o termo da busca" />
-
-            </View>
-
             <View style={estilos.cardWrapper}>
                 {listaPesquisas.map((pesquisa, index) => (
                     
                     <TouchableOpacity
                     key={index}
                     style={estilos.cardTouchable}
-                    onPress={() => goToModificarPesquisa(pesquisa.id, pesquisa.nome, pesquisa.data, pesquisa.imagemUrl, pesquisa.imagem)}
+                    onPress={() => goToModificarPesquisa(pesquisa.id, pesquisa.nome, pesquisa.data, pesquisa.imagemUrl, pesquisa.imagem, pesquisa.coleta)}
                     >
-                        <View style={estilos.card}>
-                            <Image source={{uri: pesquisa.imagemUrl}} style={{width:'40%', height: '30%'}}></Image>                  
-                            <Text>{pesquisa.nome}</Text>
-                        </View>
+                    <View style={estilos.card}>
+                        <Image source={{uri: pesquisa.imagemUrl}} style={{width:'40%', height: '30%'}}></Image>                  
+                        <Text>{pesquisa.nome}</Text>
+                    </View>
                     </TouchableOpacity>
                 ))}
-            </View>
-
-            <View>
-                <Botao tipoBotao="botaoCriar" texto="NOVA PESQUISA" onPress={goToNovaPesquisa} />
-                <Botao tipoBotao="botaoCriar" texto="AÇÕES DE PESQUISA" onPress={goToAcoesPesquisa} />
             </View>
         </View>
     )
@@ -138,4 +114,4 @@ const estilos = StyleSheet.create({
 })
 
 
-export default Home
+export default ListagemColeta
