@@ -4,15 +4,111 @@ import { Text, TextInput, Image } from 'react-native'
 import { StyleSheet } from 'react-native'
 import Botao from '../src/components/Botao'
 import Logo from '../src/components/Logo'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRoute } from '@react-navigation/native';
+
+import { collection, initializeFirestore, addDoc, query, onSnapshot, updateDoc, doc, deleteDoc} from 'firebase/firestore'
+import { app, storage } from '../src/firebase/config/firebase'
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject  } from 'firebase/storage'
+
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
 
 //Definição de função
-const modificarPesquisa = () => {
+const modificarPesquisa = (props) => {
+  const route = useRoute();
+
+  const { id, nome, data, imagemUrl, imagemNome } = route.params;
+
+  const [nomeAtual, setNomeAtual] = useState(nome)
+  const [dataAtual, setDataAtual] = useState(data)
+  const [imagem, setImagem] = useState('')
+  const [imagem2, setImagem2] = useState('')
+  const [foto, setFoto] = useState()
+  const [novaImagem, setNovaImagem] = useState(false)
+
+  console.log("modificar id: " + id)
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  function excluirPesquisa() {
+  const db = initializeFirestore(app, {experimentalForceLongPolling: true})
+  const pesquisaCollection = collection(db, "pesquisa")
 
+  useEffect( () => {
+    setNomeAtual(nome)
+    setDataAtual(data)
+    setImagem(imagemUrl)
+  }, []) 
+
+  function excluirPesquisa() {
+    const desertRef = ref(storage, imagemNome);
+
+    deleteObject(desertRef).then(() => {
+      deleteDoc(doc(db, "pesquisa", id))
+      props.navigation.navigate('Home')
+    }).catch((error) => {
+      console.log("Erro")
+    });
+  }
+
+  async function modificarPesquisa() {
+    const pesquisaRef = doc(db, "pesquisa", id)
+    const desertRef = ref(storage, imagemNome);
+
+    const nomeArquivo = (nomeAtual + Math.floor(Math.random() * 100).toString() + ".jpeg")
+    const imageRef = ref(storage, nomeArquivo)
+    const file = await fetch(imagem2)
+    const blob = await file.blob()
+
+    deleteObject(desertRef).then(() => {
+      uploadBytes(imageRef, blob, {contentType: 'image/jpeg'})
+      .then(
+        (result) => {
+          console.log("Sucesso")
+          getDownloadURL(imageRef)
+            .then(
+              (result) => {
+                updateDoc(pesquisaRef, {
+                  nome: nomeAtual,
+                  data: dataAtual,
+                  imagemUrl: result,
+                  imagem: nomeArquivo
+                })
+                
+                props.navigation.navigate('Home')
+              }
+            )
+            .catch(
+              (error) => {
+                console.log("Erro")
+              }
+            )
+        }
+      )
+      .catch(
+        (error) => {
+          console.log("Erro")
+        }
+      )
+    }).catch((error) => {
+      console.log("Erro")
+    });
+    
+  }
+
+  function addFoto() {
+    launchCamera({ mediaType: 'photo', cameraType: 'back', quality: 1 })
+      .then(
+        (result) => {  
+          setNovaImagem(true) 
+          setImagem2(result.assets[0].uri)
+          setFoto(result.assets[0])
+        }
+      )
+      .catch(
+        (error) => {
+          console.log("Erro")
+        }
+      )
   }
   
   return (
@@ -24,12 +120,17 @@ const modificarPesquisa = () => {
 
         <View style={estilos.FormContainer}>
           <Text style={estilos.FormText}>Nome</Text>
-          <TextInput style={estilos.input} placeholder="Digite o nome" />
-          <Text style={estilos.FormText}>Data</Text>
-          <TextInput style={estilos.input}  />
+          <TextInput style={estilos.input} placeholder="Digite o nome" value={nomeAtual} onChangeText={setNomeAtual}/>
+          <Text style={estilos.FormText} >Data</Text>
+          <TextInput style={estilos.input} value={dataAtual} onChangeText={setDataAtual} />
           <Text style={estilos.FormText}>Imagem</Text>
-          <TextInput style={estilos.input}/>
-          <Botao tipoBotao="botaoEntrar" texto="SALVAR" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={() => { alert('Clicou') }} />
+
+          {
+            imagem ? <Image source={{ uri: imagem }} style={{width:'50%', height: '30%'}}></Image> : null
+          }
+
+          <Botao tipoBotao="botaoEntrar" texto="ADCIONAR FOTO" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={addFoto} />
+          <Botao tipoBotao="botaoEntrar" texto="SALVAR" estilos={estilos.botao} estilosTexto={estilos.texto} onPress={modificarPesquisa} />
           <Botao mode="elevated" estilos={estilos.botaoExcluir} onPress={() => setModalVisible(true)} texto="EXCLUIR" style={estilos.buttonExcluir}></Botao>
         </View>
       </View>

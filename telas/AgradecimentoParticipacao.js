@@ -6,7 +6,11 @@ import Botao from '../src/components/Botao'
 import Logo from '../src/components/Logo'
 
 //Definição de função
-const AgradecimentoParticipacao = () => {
+const AgradecimentoParticipacao = (props) => {
+  setTimeout(() => {
+    props.navigation.navigate('Home')
+  }, 3000);
+
   return (
     <View style={estilos.view}>
       <View >

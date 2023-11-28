@@ -15,7 +15,7 @@ const AcoesPesquisa = (props) => {
     }
 
     const goToColetarDados = () => {
-        props.navigation.navigate('NovaPesquisa')
+        props.navigation.navigate('ListagemColeta')
     }
 
     const goToRelatorio = () => {
@@ -33,7 +33,7 @@ const AcoesPesquisa = (props) => {
                     <Text style={estilos.texts}>Modificar</Text>
                 </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={estilos.cardTouchable}>
+                <TouchableOpacity onPress={goToColetarDados} style={estilos.cardTouchable}>
                 <View style={estilos.card}>
                     <Image source={require("../assets/images/icone_coletar_dados.png")} />
                     <Text style={estilos.texts}>Coletar dados</Text>

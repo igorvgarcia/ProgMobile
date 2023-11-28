@@ -2,31 +2,79 @@ import { ImageBackgroundComponent, View } from 'react-native'
 import { Text, TextInput, Image, Button } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { useState } from 'react'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { collection, initializeFirestore, addDoc, query, onSnapshot, updateDoc, doc, deleteDoc} from 'firebase/firestore'
+import { app, storage } from '../src/firebase/config/firebase'
 
 import Botao from '../src/components/Botao'
 import Logo from '../src/components/Logo'
 
 const Coleta = (props) => {
+    const route = useRoute();
 
-    const realizarColeta = () => {
-        setTimeout(() => {
-            props.navigation.navigate('AgradecimentoParticipacao')
-        }, 3000);
+    const { id, nome, data, imagemUrl, imagemNome, coletas } = route.params;
+
+    const db = initializeFirestore(app, {experimentalForceLongPolling: true})
+
+    console.log("aqui: " + coletas.pessimo)
+
+    function realizarColeta(value) {
+        const pesquisaRef = doc(db, "pesquisa", id)
+        console.log(value)
+
+        switch(value) {
+            case 'pessimo':coletas.pessimo++; break;
+            case 'ruim': coletas.ruim++; break;
+            case 'neutro': coletas.neutro++; break;
+            case 'bom': coletas.bom++; break;
+            case 'excelente': coletas.excelente++; break;
+        }
+
+        updateDoc(pesquisaRef, {
+            coleta: coletas
+        })
+        .then(
+            (result) => {
+                props.navigation.navigate('AgradecimentoParticipacao')
+            }
+        )
+        .catch(
+            (error) => {
+              console.log("Erro")
+            }
+        )
     } 
-
 
     return (
         <View style={estilos.view}>
             <View style={estilos.cardWrapper}>
-                <TouchableOpacity onPress={realizarColeta} style={estilos.cardTouchable}>
+                <TouchableOpacity onPress={() => realizarColeta('pessimo')} style={estilos.cardTouchable}>
                     <View style={estilos.card}>
-                        <Image source={require("../assets/images/coleta2.png")} />
+                        <Image source={require("../assets/images/coleta2pessimo.png")} />
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => realizarColeta('ruim')} style={estilos.cardTouchable}>
+                    <View style={estilos.card}>
+                        <Image source={require("../assets/images/coleta2ruim.png")} />
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => realizarColeta('neutro')} style={estilos.cardTouchable}>
+                    <View style={estilos.card}>
+                        <Image source={require("../assets/images/coleta2neutro.png")} />
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => realizarColeta('bom')} style={estilos.cardTouchable}>
+                    <View style={estilos.card}>
+                        <Image source={require("../assets/images/coleta2bom.png")} />
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => realizarColeta('excelente')} style={estilos.cardTouchable}>
+                    <View style={estilos.card}>
+                        <Image source={require("../assets/images/coletaexcelente.png")} />
                     </View>
                 </TouchableOpacity>
             </View>
-
         </View>
     )
 }
@@ -46,7 +94,7 @@ const estilos = StyleSheet.create({
         backgroundColor: '#fff',
         width: "90%",
 
-        margin: 10,
+
 
     },
     cardWrapper: {
@@ -64,7 +112,7 @@ const estilos = StyleSheet.create({
         backgroundColor: '#2B1D62',
 
         height: 800,
-        margin: 10,
+
     },
     texts: {
         color: '#fff'
@@ -74,7 +122,7 @@ const estilos = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#2B1D62',
-        margin: 10,
+
     },
 })
 

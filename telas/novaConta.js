@@ -29,7 +29,7 @@ const NovaConta = ({ navigation }) => {
   };
   
 
-  const context = ContextManager.instance;
+
 
   const cadastrarConta = async () => {
     if (senha != senhaRepetida) {
@@ -37,12 +37,6 @@ const NovaConta = ({ navigation }) => {
       return false;
     }
     if (verifyEmail()) {
-      context.createUser({
-        nomeCompleto,
-        email,
-        senha
-      });
-
       try {
         await addUsuario();
 
